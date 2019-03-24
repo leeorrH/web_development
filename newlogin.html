@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>North Garage- login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/landPageStyle(login).css"> 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+ 
+</head>
+ <!--*********************tool bar ***********************-->
+<body>
+  <div class="container-fluid">
+  <nav class="navbar navbar-inverse">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/static/HomePage.html">North Garage</a>
+      </div>
+
+    </div>
+  </nav>
+
+
+    <div class="logincontainer">
+  <div class="container-fluid">
+     <!--login window -->
+     <h1 align="center" style = "font-family:Comic Sans MS;">login</h1>
+        <p>
+        <label for="uname"><b>Username</b></label><br>
+        <input id="userName" type="text" placeholder="Enter Username" name="uname" required><br>
+    
+        <label for="psw"><b>Password</b></label><br>
+        <input id="userPassword" type="password" placeholder="Enter Password" name="psw" required><br>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+        <button type="submit" onclick="login()">Login</button>
+        
+         <br><br>
+        <button onclick="document.getElementById('signUpWindows').style.display='block'" style="width:auto;">Sign Up</button>
+        <button onclick="document.getElementById('forgotPasswordWindow').style.display='block'" style="width:auto;">forgot password ?</button>
+        </div>
+        <!--end login window -->
+        <br>
+      </div> 
+     </div>
+     </p>
+  
+    <!--sign up window -->
+    <div id="signUpWindows" class="popWindow-background">
+            
+            <form class="popwindow-content">
+              <div class="container-fluid">
+                <span onclick="$('#signUpWindows').hide();" class="close" title="Close popWindow">&times;</span>
+                <h1 align="center" style = "font-family:Comic Sans MS;">Sign Up</h1>
+                <p>Please fill in this form to create an account.</p>
+                <hr>
+                <label for="workerNum"><b>Enter worker number:</b></label><br>
+                <input id="workerNum" type="text" placeholder="Enter worker number" name="workerNum" required><br>
+
+                <label for="workerName"><b>Enter your name</b></label><br>
+                <input id="workerName" type="text" placeholder="Enter your name" name="workerName" required><br>
+               
+                <label for="psw"><b>Password</b></label><br>
+                <input id="password" type="password" placeholder="Enter Password" name="psw" required><br>
+        
+                <label for="psw-repeat"><b>Repeat Password</b></label><br>
+                <input id="psw_repeat" type="password" placeholder="Repeat Password" name="psw-repeat" required><br>
+            
+                <div class="clearfix">
+                  <button type="submit" onclick="signUp()">Sign Up</button>
+                  <br>
+                </div>
+                <br>
+              </div>
+            </form>
+          </div>
+          <!--end sign up window -->
+<!--forgotPassword window -->
+<div id="forgotPasswordWindow" class="popWindow-background">
+  
+    <form class="popwindow-content">
+      <div class="container-fluid">
+        <span onclick="$('#forgotPasswordWindow').hide();" class="close" title="Close popWindow">&times;</span>
+        <h1 align="center" style = "font-family:Comic Sans MS;">Reset Password</h1>
+        <p>Please fill in this form to reset your password.</p>
+        <hr>
+        <label for="workerNumber"><b>Enter worker number:</b></label><br>
+        <input id="workerNumber" type="text" placeholder="Enter worker number" required><br>
+
+        <label for="manager"><b>Please Enter manager code number</b></label><br>
+        <input id="managerNumber" type="text" required><br>
+
+        <label for="mamagerPassword"><b>Please Enter manager password</b></label><br>
+        <input id="managerPassword" type="password" required><br>
+    
+        <div class="clearfix">
+          <button type="submit" onclick="resetingPassword()">reset password</button>
+          <br> 
+        </div>
+        <br>
+      </div>
+    </form>
+  </div>  
+ <script>
+var workNumber = 400000 ;
+
+function handleServerResponse(res){
+var message="";
+switch(res.message){
+case "login":
+  if(res.success){
+    window.location.href = "http://localhost:3000/homepage";
+    alert(" Hello "+res.obj); // To change name on navbar
+  }else {
+    alert(" User Name Or Password Not Valid");
+  }
+  break;
+case "signUp":
+  if(res.success) {
+      message="your userName is: "+res.obj.workerNumber+" your password is "+res.obj.password+" Enter OK to log in";
+      alert(message);
+  }
+  else {
+   message = "You allredy signed up try to login";
+   alert(message);
+  }
+  $('#signUpWindows').hide();
+  window.location.href = "http://localhost:3000" ;
+  break;
+case "resetPassword":
+  if(res.success){
+    message="your password is: "+res.obj+" Enter OK to log in";
+    alert(message);
+    $('#forgotPasswordWindow').hide();
+  }
+break;
+}
+
+}
+/*
+*login function
+* created by leeorr
+* send data when login button clicked
+*/
+function login(){
+  var workerNum= $('#userName').val();
+  var password= $('#userPassword').val();
+
+  var json = {
+    'WorkerNum' : workerNum,
+    'password' : password
+  };
+
+  var req = $.post('/login',json); //sendeing post request to the server for login
+  req.done(handleServerResponse);
+}
+
+ function signUp(){
+  var workerNum= $('#workerNum').val();
+  var workerName= $('#workerName').val();
+  var password= $('#password').val();
+  var repeatPassword=$('#psw_repeat').val();
+    if(!(workerName==""||workerNum==""||password==""||repeatPassword=="")){    
+      if (!(password ===repeatPassword))
+          alert("please repeat the password again");
+      else{
+        var json = {
+          'workerNum': workerNum,
+          'workerName' : workerName,
+          'password' : password ,
+          'type' : 'worker'
+        };
+        var req = $.post('/signUp',json); //sendeing post request to the server for signUp
+        req.done(handleServerResponse);
+      } 
+    }
+ }
+
+ function resetingPassword(){
+  var workerNum=$('#workerNumber').val();
+  var managerNumber=$('#managerNumber').val();
+  var managerPassword=$('#managerPassword').val();
+  var resetPass={
+    'workerNum': workerNum,
+    'managerNumber': managerNumber,
+    'managerPassword': managerPassword
+   }
+   var req = $.post('/resetPassword',resetPass); //sendeing post request to the server for reset Password
+   req.done(handleServerResponse);
+ }
+
+ </script>
+
+</body>
+
+</html>

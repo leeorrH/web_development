@@ -1,0 +1,191 @@
+
+ body {
+  margin:0;
+  padding: 0;
+  background: url(backGround.jpg) ;
+  background-size: cover;
+  background-position: center;
+  font-family: Arial, Helvetica, sans-serif;
+  
+  }
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+select [type=text]{
+  width: 70%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+#NorthG {
+    color: azure ;
+}
+/* Set a style for all buttons */
+button {
+  background-color: rgb(55, 109, 180);
+  color: white;
+  padding: 14px 20px;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+  width: 80%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+  width: 80%;
+  padding: 14px 20px;
+  background-color: #b84139;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Center the image and position the close button */
+.imgcontainer { 
+  text-align: center;
+  margin: 24px 0 12px 0;
+  position: relative;
+}
+.split {
+    height: 100%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    top: 1;
+    overflow-x: hidden;
+    padding-top: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  
+.logincontainer {
+  margin: auto;
+  background-color: #ffffff9f;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+  margin-top: 5%;
+  width: 35%;
+  height: 60%;
+
+} 
+
+div.transbox {
+  margin: 5%;
+  background-color: #ffffff9f;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+div.transbox p{
+  margin: 5%;
+  font-weight: bold;
+  color: #000000;
+}
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+/* The pop window (background) */
+.popWindow-background {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: #ffffff9f; /* Black w/ opacity */
+  padding-top: 1%;
+}
+
+/* popWindow Content/Box */
+.popwindow-content {
+  background-color: #fefefe;
+  margin: 3% auto; /* 5% from the top, 15% from the bottom and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 11%;
+  top: 8%;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
+.detailsInput {
+  width: 30px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+.detailsCombo {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)} 
+  to {-webkit-transform: scale(1)}
+}
+ 
+@keyframes animatezoom {
+  from {transform: scale(0)} 
+  to {transform: scale(1)}
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+  span.psw {
+     display: block;
+     float: none;
+  }
+  .cancelbtn {
+     width: 100%;
+  }
+}
+
+.navbar-inverse {
+margin-left: 2px ;
+margin-right: 2px; 
+}
+/*for details windows position*/
+.item1 { grid-area: 1 / 1 / 2 / 2; }
+.item2 { grid-area: 1 / 2 / 2 / 3; }
+.item3 { grid-area: 1 / 3 / 2 / 4; }
+.grid-container {
+  display: grid;
+  grid-auto-rows: 70px;
+  padding: 10px;
+}

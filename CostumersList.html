@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>North Garage- costumers List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/landPageStyle(login).css"> 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+ 
+</head>
+ <!--*********************tool bar ***********************-->
+<body>
+  <div class="container-fluid">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/static/HomePage.html">North Garage</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="/static/WorkList.html">Works List</a></li>
+        <li class="active"><a href="/static/CostumersList.html">Costumers List</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <div class="transbox">
+  <div class="container-fluid">
+    <!--website body -->
+     <div class="custom-select" style="width:200px;">
+       <p>search by : 
+          <select id="colNameSearch">
+            <option value="Customer ID">Customer ID</option>
+            <option value="Customer First Name">Customer first Name</option>
+            <option value="Customer Last Name">Customer last Name</option>
+            <option value="Customer Phone">Customer phone</option>
+          </select>
+        </div>
+      Search : <input id="searchByInput" type="text" name="search" style="width:200px;"><br>
+      <div class="custom-select" style="width:200px;">
+          Sort By : 
+          <select id="colNameSort">
+              <option value="CustomerID">Customer ID</option>
+              <option value="CustomerFirstName">Customer first Name</option>
+              <option value="CustomerLastName">Customer last Name</option>
+             </select>
+           </div>
+    
+      <table  id="customersTable"class="table table-hover" class="tablesorter">
+          <thead>
+            <tr>
+              <th scope="col1">Customer ID</th>
+              <th scope="col2">Customer First Name</th>
+              <th scope="col3">Customer Last Name</th>
+              <th scope="col4">Customer phone</th>
+            </tr>
+          </thead>
+          <tbody id="workesList"></tbody>
+        </table>
+        <div class="grid-container">
+            <div class="item1"></div>
+            <div class="item2"> <button type="button" class="signupbtn" onclick="addCustomer()">Add customer</button></div>
+            <div class="item3"></div>
+          </div>
+      </div> 
+     </div>
+     </p>
+  </div>
+    <div id="customerDetails" class="popWindow-background">
+      <form class="popwindow-content">
+        <div class="container-fluid">
+          <span onclick="$('#customerDetails').hide();" class="close" title="Close popWindow">&times;</span>
+          <h1 align="center" style = "font-family:Comic Sans MS;">Customer details</h1>
+          <hr>  
+          <div class="grid-container">
+              <div class="item1"> <label for="customerID"><b>Customer ID:</b></label><br>
+                                  <input width='30px'type="text" name="customerID" required><br></div>                 
+              <div class="item2"> </div>
+              <div class="item3"> <label for="customerFirstName"><b>Customer first name</b></label><br>
+                                  <input class="detailsInput" type="text" name="customerFirstName" required><br></div>
+          </div>
+          <div class="grid-container">
+              <div class="item1"> <label for="customerLastName"><b>Customer last name:</b></label><br> 
+                                  <input class="detailsInput" type="text" name="customerLastName" required><br>
+                                </div>
+              <div class="item2"></div>
+              <div class="item3"> <label for="customerPhone"><b>Customer phone number:</b></label><br>
+                <input class="detailsInput" type="text" name="customerPhone" required><br></div>
+          <div class="grid-container">
+              <div class="item1"><button id='okBtn'type="button" onclick="okAddcustomer()">ok</button>
+                                 <button id='updateBtn'type="button" onclick="upDateCustomerDetails()">Update</button></div>
+              <div class="item2"><button id="del" type="button"onclick="deleteCustomer(event)" >Delete</button></div>
+              <div class="item3"> <button type="button" onclick="$('#customerDetails').hide()" class="cancelbtn">Cancel</button></div>
+            </div>
+        <br>
+          </div>
+          <br>
+      </form>
+    </div>
+
+
+     <script>
+   
+      
+        function handleServerResponse(res){
+            switch(res.message){ 
+              case "customerList":
+              if(!res.success){
+                break;
+              } // need to think how to deal with one obj only
+              if(res.obj.length > 1) createRow(res.obj);
+              else myCreateFunction(res.obj[0]);
+              break;
+              case "addCustomer":
+              myCreateFunction(res.obj);
+              $('#customerDetails').hide();
+              break;
+              case "showCustomerDetails":
+              if(res.success) {
+                //open window and show details
+                document.getElementById('customerDetails').style.display='block';
+                document.getElementById('del').style.display='block';
+                $('#okBtn').hide();
+                document.getElementById('updateBtn').style.display='block';
+                $('[name="customerID"]').val(res.obj._id);
+                $('[name="customerFirstName"]').val(res.obj.customerFirstName);
+                $('[name="customerLastName"]').val(res.obj.customerLastName);
+                $('[name="customerPhone"]').val(res.obj.customerPhone);
+              }
+                else alert("somting happend, try again later");
+              break;
+              case "upDateCustomer" : 
+              alert("customer up-dated successfully");
+              $('#customerDetails').hide();
+              myCreateFunction(res.obj)
+              break;
+              
+              case "deleteCustomer":
+              alert("customer deleted successfully");
+              $('#customerDetails').hide();
+              break;
+
+            }
+          }
+        
+        function addCustomer(){//open add work form
+        document.getElementById('okBtn').style.display='block';
+        $('#updateBtn').hide();
+        document.getElementById('customerDetails').style.display='block';
+        $('#del').hide();
+        $('[name="customerID"]').val("");
+        $('[name="customerFirstName"]').val("");
+        $('[name="customerLastName"]').val("");
+        $('[name="customerPhone"]').val("");
+        }
+
+        function gettingDataFromElements(){
+        var customer = {
+            '_id': $('[name="customerID"]').val(),
+            'customerFirstName': $('[name="customerFirstName"]').val(),
+            'customerLastName': $('[name="customerLastName"]').val(),
+            'customerPhone': $('[name="customerPhone"]').val(), 
+        }; 
+        return customer; 
+        }  
+
+        function upDateCustomerDetails() {
+        var upDateCustomer = gettingDataFromElements();
+        var req = $.post('/upDateCustomer',upDateCustomer); //sendeing post request to the server for workslist
+        deleteRow(upDateCustomer._id) ; 
+        req.done(handleServerResponse);
+        }
+
+        function deleteRow(DataID){
+          var row=document.getElementById(""+DataID);
+          row.parentNode.removeChild(row);
+        }
+
+        function okAddcustomer(){
+        newCustomer = gettingDataFromElements();
+        if(!(newCustomer._id==""||newCustomer.customerFirstName==""
+        ||newCustomer.customerLastName==""||newCustomer.customerPhone=="")){
+          var req = $.post('/addCustomer',newCustomer); //sendeing post request to the server for workslist
+          req.done(handleServerResponse);
+        }
+        else alert("Please fill all fields");
+      }
+
+      function createRow(objectArray){//create few row in customersTable
+         objectArray.forEach(element => {
+          myCreateFunction(element);
+          }); 
+         }
+
+      function myCreateFunction(obj) {//create a row in works table
+          var customersTable =document.getElementById("customersTable");
+          var row = customersTable.insertRow(1);
+          row.id=""+obj._id;
+          var cell = row.insertCell(0);
+          var cell1 = row.insertCell(1);
+          var cell2 = row.insertCell(2);
+          var cell3 = row.insertCell(3);
+          cell.innerHTML  = obj._id;
+          cell1.innerHTML = obj.customerFirstName;
+          cell2.innerHTML = obj.customerLastName;
+          cell3.innerHTML = obj.customerPhone;
+          var rows = customersTable.getElementsByTagName("tr");
+          rows[1].onclick = function(event) {
+            var customerID= this.id;
+            var req = $.post('/showCustomerDetails',{_id: customerID}); // post request showing catomer details
+            req.done(handleServerResponse);
+          }
+      }
+      function deleteCustomer(event){
+        var delCustomerID=$('[name="customerID"]').val();
+        var returnVal = confirm("You are about to delete customer with ID:"+
+                                 delCustomerID +" are you sure you want to continue ?");
+          if( returnVal == true ) {
+            var req = $.post('/deleteCustomer',{_id: delCustomerID}); //post request to delete Customer
+            deleteRow(delCustomerID);
+            req.done(handleServerResponse);
+             }
+            else {
+                return false;
+               }
+       }
+
+      
+ 
+
+        var sortBy = $('#colNameSort').on('change', sortTable);
+        function sortTable() {  
+          var table, rows,col, switching, i, x, y, shouldSwitch;
+          table = document.getElementById("customersTable");
+          sortBy= $('#colNameSort').val();
+          switching = true;
+          switch(sortBy){
+          case 'CustomerID':
+            col=0;
+            break;
+          case 'CustomerFirstName':
+            col=1;
+            break;
+          case 'CustomerLastName':
+            col=2;
+            break;
+          }
+          /*Make a loop that will continue until
+          no switching has been done:*/
+          while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+              //start by saying there should be no switching:
+              shouldSwitch = false;
+              /*Get the two elements you want to compare,
+              one from current row and one from the next:*/
+              x = rows[i].getElementsByTagName("TD")[col];
+              y = rows[i + 1].getElementsByTagName("TD")[col];
+              //check if the two rows should switch place:
+              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                //if so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+              }
+            }
+            if (shouldSwitch) {
+              /*If a switch has been marked, make the switch
+              and mark that a switch has been done:*/
+              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+              switching = true;
+            }
+          }
+        }
+        
+        
+        $(document).ready(function () {
+        var req = $.post('/customerList'); //sendeing post request to the server for workslist
+        req.done(handleServerResponse);
+
+        var $S = $('#colNameSearch').on('change', filter);
+        var $i = $("#searchByInput").on('keyup', filter);
+        var $rows = $("#customersTable tbody > tr");
+
+        function filter() {
+          var input = document.getElementById("searchByInput");
+          if(input){
+            var f = input.value.toUpperCase();
+            var table = document.getElementById("customersTable");
+            var tr = table.getElementsByTagName("tr");
+            var filterBy= $('#colNameSearch').val();
+            
+            switch(filterBy){
+              case 'Customer ID':
+                colFiltering=0;
+                break;
+              case 'Customer First Name':
+                colFiltering=1;
+                break;
+              case 'Customer Last Name':
+                colFiltering=2;
+                break;
+              case 'Customer Phone':
+                colFiltering=3;
+                break;
+              }
+              for (var i = 1; i < tr.length; i++) {
+                var row = tr[i].getElementsByTagName("td");
+                var col=row[colFiltering].innerHTML.toUpperCase();
+                if (col.indexOf(f) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }      
+            }
+         }
+      };
+    });
+
+
+      </script>
+</body>
+
+</html>
